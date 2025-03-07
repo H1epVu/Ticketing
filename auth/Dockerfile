@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY package.json .
 
-RUN npm install --cache /tmp/npm-cache
+RUN npm install --cache /tmp/npm-cache --omit=dev
 
 COPY . .
 
