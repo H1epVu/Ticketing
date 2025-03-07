@@ -14,8 +14,10 @@ spec:
     spec:
       containers:
         - name: auth
-          image: ticket/auth
-          env: 
+          image: henryvu02/ticket_auth
+          env:
+            - name: MONGO_URI
+              value: mongodb://auth-mongo-srv:27017/auth
             - name: JWT_KEY
               valueFrom:
                 secretKeyRef:
