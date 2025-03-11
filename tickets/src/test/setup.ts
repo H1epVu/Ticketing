@@ -8,7 +8,9 @@ let mongo: any;
 
 declare global {
     var signin: () => string[];
-  }  
+}
+
+jest.mock('../nats-wrapper');
 
 beforeAll(async () => {
     process.env.JWT_KEY = 'secret';
@@ -21,6 +23,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+    jest.clearAllMocks();
     const db = mongoose.connection.db;
     if (!db) {
         throw new Error('Database connection is not established');
