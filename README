@@ -1,0 +1,30 @@
+# Ticketing System Backend
+
+## Introduction
+This project is the backend service for a ticketing system. It provides APIs for managing tickets, users, and events. The backend is built using modern web technologies to ensure scalability, reliability, and maintainability.
+
+## Technologies Used
+- **Node.js**: JavaScript runtime for building the server-side application.
+- **Express.js**: Web framework for Node.js to handle routing and middleware.
+- **MongoDB**: NoSQL database for storing ticketing data.
+- **Mongoose**: ODM (Object Data Modeling) library for MongoDB and Node.js.
+- **JWT**: JSON Web Tokens for secure authentication.
+- **Docker**: Containerization for consistent development and deployment environments.
+- **@henryvu02/common**: Custom npm package for shared functionality across multiple projects.
+
+## Features
+- **User Management**: Register, login, and manage user profiles.
+- **Ticket Management**: Purchase, view, and manage tickets.
+- **Authentication & Authorization**: Secure endpoints using JWT.
+- **API Documentation**: Comprehensive API documentation using Swagger.
+
+## Folder Structure
+- **/controllers**: Contains the logic for handling requests and responses.
+- **/models**: Defines the data schemas and interacts with the database.
+- **/routes**: Defines the API endpoints and routes.
+- **/middlewares**: Custom middleware functions for request processing.
+- **/config**: Configuration files for the application.
+- **/utils**: Utility functions and helpers.
+
+## Disclaimer
+This application is intended solely for educational purposes and is not for commercial use.
