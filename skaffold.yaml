@@ -39,5 +39,21 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: henryvu02/ticket_expiration
+      context: expiration
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: henryvu02/ticket_payments
+      context: payments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
 deploy:
   kubectl: {}
