@@ -1,36 +1,30 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
-
 import { app } from '../../app';
-import { getAuthCookie } from '../../test/utils';
 import { Order, OrderStatus } from '../../models/order';
 import { Ticket } from '../../models/ticket';
 import { natsWrapper } from '../../nats-wrapper';
 
 it('returns an error if the ticket does not exist', async () => {
   const ticketId = new mongoose.Types.ObjectId();
-  const cookie = getAuthCookie();
 
   await request(app)
     .post('/api/orders')
-    .set('Cookie', cookie)
+    .set('Cookie', global.signin())
     .send({ ticketId })
     .expect(404);
 });
 
 it('returns an error if the ticket is already reserved', async () => {
-  const cookie = getAuthCookie();
-
   const ticket = Ticket.build({
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
     price: 20,
   });
   await ticket.save();
-
   const order = Order.build({
     ticket,
-    userId: 'asdf',
+    userId: 'laskdflkajsdf',
     status: OrderStatus.Created,
     expiresAt: new Date(),
   });
@@ -38,14 +32,12 @@ it('returns an error if the ticket is already reserved', async () => {
 
   await request(app)
     .post('/api/orders')
-    .set('Cookie', cookie)
+    .set('Cookie', global.signin())
     .send({ ticketId: ticket.id })
     .expect(400);
 });
 
 it('reserves a ticket', async () => {
-  const cookie = getAuthCookie();
-
   const ticket = Ticket.build({
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
@@ -55,7 +47,7 @@ it('reserves a ticket', async () => {
 
   await request(app)
     .post('/api/orders')
-    .set('Cookie', cookie)
+    .set('Cookie', global.signin())
     .send({ ticketId: ticket.id })
     .expect(201);
 });
@@ -70,7 +62,7 @@ it('emits an order created event', async () => {
 
   await request(app)
     .post('/api/orders')
-    .set('Cookie', getAuthCookie())
+    .set('Cookie', global.signin())
     .send({ ticketId: ticket.id })
     .expect(201);
 

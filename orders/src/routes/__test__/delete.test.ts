@@ -1,14 +1,12 @@
-import request from 'supertest';
 import mongoose from 'mongoose';
-
+import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { Order, OrderStatus } from '../../models/order';
-import { getAuthCookie } from '../../test/utils';
 import { natsWrapper } from '../../nats-wrapper';
 
 it('marks an order as cancelled', async () => {
-  // create a ticket with Ticket model
+  // create a ticket with Ticket Model
   const ticket = Ticket.build({
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
@@ -16,19 +14,19 @@ it('marks an order as cancelled', async () => {
   });
   await ticket.save();
 
+  const user = global.signin();
   // make a request to create an order
-  const cookie = getAuthCookie();
-
   const { body: order } = await request(app)
     .post('/api/orders')
-    .set('Cookie', cookie)
+    .set('Cookie', user)
     .send({ ticketId: ticket.id })
     .expect(201);
 
   // make a request to cancel the order
   await request(app)
     .delete(`/api/orders/${order.id}`)
-    .set('Cookie', cookie)
+    .set('Cookie', user)
+    .send()
     .expect(204);
 
   // expectation to make sure the thing is cancelled
@@ -37,8 +35,7 @@ it('marks an order as cancelled', async () => {
   expect(updatedOrder!.status).toEqual(OrderStatus.Cancelled);
 });
 
-it('emits an order cancelled event', async () => {
-  // create a ticket with Ticket model
+it('emits a order cancelled event', async () => {
   const ticket = Ticket.build({
     id: new mongoose.Types.ObjectId().toHexString(),
     title: 'concert',
@@ -46,19 +43,19 @@ it('emits an order cancelled event', async () => {
   });
   await ticket.save();
 
+  const user = global.signin();
   // make a request to create an order
-  const cookie = getAuthCookie();
-
   const { body: order } = await request(app)
     .post('/api/orders')
-    .set('Cookie', cookie)
+    .set('Cookie', user)
     .send({ ticketId: ticket.id })
     .expect(201);
 
   // make a request to cancel the order
   await request(app)
     .delete(`/api/orders/${order.id}`)
-    .set('Cookie', cookie)
+    .set('Cookie', user)
+    .send()
     .expect(204);
 
   expect(natsWrapper.client.publish).toHaveBeenCalled();
